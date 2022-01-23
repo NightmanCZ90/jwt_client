@@ -3,11 +3,15 @@ import { reduxForm, Field } from 'redux-form';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
+import { useNavigate } from 'react-router-dom'
 
-const Signup = ({ handleSubmit, signup }) => {
+const Signup = ({ errorMessage, handleSubmit, signup }) => {
+  const navigate = useNavigate();
 
   const onSubmit = (formProps) => {
-    signup(formProps);
+    signup(formProps, () => {
+      navigate('/feature');
+    });
   }
 
   return (
@@ -30,12 +34,19 @@ const Signup = ({ handleSubmit, signup }) => {
           autoComplete="none"
         />
       </fieldset>
+      <div>
+        {errorMessage}
+      </div>
       <button type="submit">Sign Up</button>
     </form>
   )
 }
 
+function mapState(state) {
+  return { errorMessage: state.auth.errorMessage }
+}
+
 export default compose(
-  connect(null, actions),
-  reduxForm({ form: 'signup' })
+  connect(mapState, actions),
+  reduxForm({ form: 'signup' }),
 )(Signup);

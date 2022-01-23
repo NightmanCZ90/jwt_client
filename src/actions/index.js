@@ -1,8 +1,14 @@
 import axios from 'axios';
-import { AUTH_USER } from './types';
+import { AUTH_USER, AUTH_ERR } from './types';
 
-export const signup = (formProps) => async (dispatch) => {
-  const response = await axios.post(`${process.env.REACT_APP_SERVER}/signup`, formProps);
+export const signup = (formProps, callback) => async (dispatch) => {
+  try {
+    const response = await axios.post(`${process.env.REACT_APP_SERVER}/signup`, formProps);
 
-  dispatch({ type: AUTH_USER, payload: response.data.token });
+    dispatch({ type: AUTH_USER, payload: response.data.token });
+    callback();
+  } catch (err) {
+    dispatch({ type: AUTH_ERR, payload: 'Email in use' });
+  }
+
 }
