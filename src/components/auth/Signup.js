@@ -1,9 +1,17 @@
 import React from 'react';
 import { reduxForm, Field } from 'redux-form';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import * as actions from '../../actions';
 
-const Signup = () => {
+const Signup = ({ handleSubmit, signup }) => {
+
+  const onSubmit = (formProps) => {
+    signup(formProps);
+  }
+
   return (
-    <form action="">
+    <form action="" onSubmit={handleSubmit(onSubmit)}>
       <fieldset>
         <label htmlFor="">Email</label>
         <Field
@@ -22,8 +30,12 @@ const Signup = () => {
           autoComplete="none"
         />
       </fieldset>
+      <button type="submit">Sign Up</button>
     </form>
   )
 }
 
-export default reduxForm({ form: 'signup' })(Signup);
+export default compose(
+  connect(null, actions),
+  reduxForm({ form: 'signup' })
+)(Signup);
